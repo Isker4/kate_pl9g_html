@@ -48,19 +48,26 @@
             animation: run 2s infinite linear;
         }
 
-        .footprints {
+        .surprise-btn {
             position: fixed;
-            bottom: 33vh;
-            width: 100%;
-            font-size: 1.2em;
-            opacity: 0.5;
-            animation: footprints 2s infinite linear;
+            bottom: 10vh;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
         }
 
         .surprise {
             position: absolute;
             font-size: 2em;
-            animation: fall 5s ease-in forwards;
+            animation: fall 4s ease-in forwards;
         }
 
         @keyframes shine {
@@ -82,19 +89,12 @@
             0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
-
-        @keyframes footprints {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
     </style>
 </head>
 <body>
     <div class="sun">🌞</div>
     <div class="waves"></div>
     <div class="beach"></div>
-    <div class="footprints">👣👣👣👣👣</div>
     <div class="family">
         <span title="Папа">👨</span>
         <span title="Мама">👩</span>
@@ -102,6 +102,7 @@
         <span title="Сын 7 лет">👦</span>
         <span title="Сын 2 лет">🧒</span>
     </div>
+    <button class="surprise-btn">🎁 СЮРПРИЗ</button>
 
 <script>
 const surprises = {
@@ -112,29 +113,28 @@ const surprises = {
     '🧒': ['🍼', '🧸', '🚂', '🍪', '🎈', '🦆', '🐌']
 };
 
-document.addEventListener('click', (e) => {
+function createSurprise() {
     const members = document.querySelectorAll('.family span');
     const member = members[Math.floor(Math.random() * members.length)];
     const emoji = surprises[member.innerHTML][Math.floor(Math.random() * 7)];
     
+    const rect = member.getBoundingClientRect();
+    const x = rect.left + rect.width/2;
+    
     const surprise = document.createElement('div');
     surprise.className = 'surprise';
-    surprise.style.left = `${e.clientX}px`;
-    surprise.style.animationDuration = `${4 + Math.random() * 3}s`;
+    surprise.style.left = `${x}px`;
+    surprise.style.animationDuration = `${3 + Math.random() * 2}s`;
     surprise.innerHTML = emoji;
     
     document.body.appendChild(surprise);
-    setTimeout(() => surprise.remove(), 6000);
-});
+    setTimeout(() => surprise.remove(), 5000);
+}
 
-document.addEventListener('touchstart', (e) => {
+document.querySelector('.surprise-btn').addEventListener('click', createSurprise);
+document.querySelector('.surprise-btn').addEventListener('touchstart', (e) => {
     e.preventDefault();
-    const touch = e.touches[0];
-    const event = new MouseEvent('click', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-    });
-    document.dispatchEvent(event);
+    createSurprise();
 }, {passive: false});
 </script>
 </body>
