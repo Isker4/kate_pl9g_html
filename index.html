@@ -8,10 +8,28 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: #87CEEB;
+            background: linear-gradient(#87CEEB 60%, #1E90FF);
             touch-action: manipulation;
+            height: 100vh;
         }
-        
+
+        .sun {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3em;
+            animation: shine 2s infinite alternate;
+        }
+
+        .waves {
+            position: fixed;
+            bottom: 30vh;
+            width: 100%;
+            height: 50px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 10 Q25 5 50 10 T100 10" fill="%231E90FF" /></svg>');
+            animation: waves 4s infinite linear;
+        }
+
         .beach {
             position: fixed;
             bottom: 0;
@@ -30,10 +48,29 @@
             animation: run 2s infinite linear;
         }
 
+        .footprints {
+            position: fixed;
+            bottom: 33vh;
+            width: 100%;
+            font-size: 1.2em;
+            opacity: 0.5;
+            animation: footprints 2s infinite linear;
+        }
+
         .surprise {
             position: absolute;
             font-size: 2em;
-            animation: fall 3s linear forwards;
+            animation: fall 5s ease-in forwards;
+        }
+
+        @keyframes shine {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        @keyframes waves {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50px); }
         }
 
         @keyframes run {
@@ -42,13 +79,22 @@
         }
 
         @keyframes fall {
-            0% { transform: translateY(-100vh) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes footprints {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
+    <div class="sun">🌞</div>
+    <div class="waves"></div>
     <div class="beach"></div>
+    <div class="footprints">👣👣👣👣👣</div>
     <div class="family">
         <span title="Папа">👨</span>
         <span title="Мама">👩</span>
@@ -59,28 +105,28 @@
 
 <script>
 const surprises = {
-    '👨': ['🎮', '🍺', '🎧', '🔧', '📱'],
-    '👩': ['💄', '👗', '💍', '🌷', '🍰'],
-    '👧': ['📱', '🎧', '💄', '🎨', '🎀'],
-    '👦': ['⚽', '🚗', '🎮', '🍭', '🚲'],
-    '🧒': ['🍼', '🧸', '🚂', '🍪', '🎈']
+    '👨': ['🎮', '🍺', '🎧', '🔧', '📱', '🎣', '🏆'],
+    '👩': ['💄', '👗', '💍', '🌷', '🍰', '📚', '🛍️'],
+    '👧': ['📱', '🎧', '💄', '🎨', '🎀', '🎸', '👟'],
+    '👦': ['⚽', '🚗', '🎮', '🍭', '🚲', '🤖', '🎲'],
+    '🧒': ['🍼', '🧸', '🚂', '🍪', '🎈', '🦆', '🐌']
 };
 
 document.addEventListener('click', (e) => {
     const members = document.querySelectorAll('.family span');
     const member = members[Math.floor(Math.random() * members.length)];
-    const emoji = surprises[member.innerHTML][Math.floor(Math.random() * 5)];
+    const emoji = surprises[member.innerHTML][Math.floor(Math.random() * 7)];
     
     const surprise = document.createElement('div');
     surprise.className = 'surprise';
     surprise.style.left = `${e.clientX}px`;
+    surprise.style.animationDuration = `${4 + Math.random() * 3}s`;
     surprise.innerHTML = emoji;
     
     document.body.appendChild(surprise);
-    setTimeout(() => surprise.remove(), 3000);
+    setTimeout(() => surprise.remove(), 6000);
 });
 
-// Адаптация для touch-устройств
 document.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const touch = e.touches[0];
