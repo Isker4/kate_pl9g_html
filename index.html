@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Семья на пляже</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #87CEEB;
+            touch-action: manipulation;
+        }
+        
+        .beach {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 30vh;
+            background: #FFD700;
+        }
+
+        .family {
+            position: fixed;
+            bottom: 30vh;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            font-size: 2.5em;
+            animation: run 2s infinite linear;
+        }
+
+        .surprise {
+            position: absolute;
+            font-size: 2em;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes run {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="beach"></div>
+    <div class="family">
+        <span title="Папа">👨</span>
+        <span title="Мама">👩</span>
+        <span title="Дочь 13 лет">👧</span>
+        <span title="Сын 7 лет">👦</span>
+        <span title="Сын 2 лет">🧒</span>
+    </div>
+
+<script>
+const surprises = {
+    '👨': ['🎮', '🍺', '🎧', '🔧', '📱'],
+    '👩': ['💄', '👗', '💍', '🌷', '🍰'],
+    '👧': ['📱', '🎧', '💄', '🎨', '🎀'],
+    '👦': ['⚽', '🚗', '🎮', '🍭', '🚲'],
+    '🧒': ['🍼', '🧸', '🚂', '🍪', '🎈']
+};
+
+document.addEventListener('click', (e) => {
+    const members = document.querySelectorAll('.family span');
+    const member = members[Math.floor(Math.random() * members.length)];
+    const emoji = surprises[member.innerHTML][Math.floor(Math.random() * 5)];
+    
+    const surprise = document.createElement('div');
+    surprise.className = 'surprise';
+    surprise.style.left = `${e.clientX}px`;
+    surprise.innerHTML = emoji;
+    
+    document.body.appendChild(surprise);
+    setTimeout(() => surprise.remove(), 3000);
+});
+
+// Адаптация для touch-устройств
+document.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const event = new MouseEvent('click', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+    });
+    document.dispatchEvent(event);
+}, {passive: false});
+</script>
+</body>
+</html>
